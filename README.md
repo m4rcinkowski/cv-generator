@@ -1,3 +1,12 @@
+# CV Generator
+
+An app to build a CV as a data structure without focusing on the design.
+
+In general, this app is a mere practice app for me to learn React ;-)  
+The rest of this readme is general content.
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
