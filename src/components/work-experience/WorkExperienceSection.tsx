@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Header } from '../SectionHeader';
 import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
 import SectionItem from './SectionItem';
@@ -22,6 +22,7 @@ type WorkExperienceProps = typeof WorkExperienceSection.defaultProps & {};
 
 type WorkExperienceState = {
   workItems: WorkItem[],
+  showCreationForm: boolean,
 };
 
 class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExperienceState> {
@@ -32,10 +33,13 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
 
   constructor(props: Readonly<WorkExperienceProps>) {
     super(props);
-    this.state = { workItems: WorkExperienceSection.sortItems(props.workItems) };
+    this.state = {
+      workItems: WorkExperienceSection.sortItems(props.workItems),
+      showCreationForm: false,
+    };
   }
 
-  public render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+  public render(): React.ReactNode {
     return (
       <div className="column">
         {this.renderSection()}
@@ -59,8 +63,17 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
   }
 
+  private onAddClicked = () => {
+    this.setState({ showCreationForm: !this.state.showCreationForm });
+  };
+
   private renderSection() {
-    let content;
+    let content: ReactNode;
+    let creationForm: ReactNode;
+
+    if (this.state.showCreationForm) {
+      creationForm = <WorkItemCreateForm onSubmit={this.onNewItem}/>;
+    }
 
     if (!this.state.workItems.length) {
       content = <div className="ui center aligned padded text container" style={{ height: '4em' }}>
@@ -73,9 +86,9 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     }
 
     return <>
-      <Header name="Work experience"/>
+      <Header name="Work experience" onAddClicked={this.onAddClicked}/>
       {content}
-      <WorkItemCreateForm onSubmit={this.onNewItem}/>
+      {creationForm}
     </>;
   }
 }

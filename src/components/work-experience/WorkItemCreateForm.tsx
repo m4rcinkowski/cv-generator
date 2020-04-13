@@ -7,31 +7,24 @@ type CreateFormProps = {
 };
 
 class WorkItemCreateForm extends Component<CreateFormProps> {
-  private readonly formRef: React.RefObject<HTMLFormElement>;
-
-  constructor(props: Readonly<CreateFormProps>) {
-    super(props);
-
-    this.formRef = React.createRef();
-  }
-
   private onNewWorkItem: React.FormEventHandler = (event) => {
     event.preventDefault();
     const target = event.target as typeof event.target & {
       name: { value: string },
       dateFrom: { value: string },
+      reset: () => void,
     };
 
     this.props.onSubmit({
       name: target.name.value,
       dateFrom: target.dateFrom.value,
     });
-    this.formRef.current?.reset();
+    target.reset();
   };
 
   public render(): React.ReactNode {
     return (
-      <form ref={this.formRef} onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
+      <form onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
         <div className="two fields">
           <div className="field required four wide">
             <label htmlFor="create-work-item-from">Since:</label>
