@@ -1,14 +1,15 @@
 import React from 'react';
-import { Header } from './SectionHeader';
+import { Header } from '../SectionHeader';
 import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
+import SectionItem from './SectionItem';
 
-type WorkSubsection = {
+export type WorkSubsection = {
   type: 'note' | 'project',
   content: string,
   params: { [k: string]: string },
 };
 
-type WorkItem = {
+export type WorkItem = {
   id: string | number,
   name: string,
   dateFrom: Date,
@@ -28,9 +29,11 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     workItems: [] as WorkItem[],
   };
 
-  state = {
-    workItems: [] as WorkItem[],
-  };
+
+  constructor(props: Readonly<WorkExperienceProps>) {
+    super(props);
+    this.state = { workItems: WorkExperienceSection.sortItems(props.workItems) };
+  }
 
   public render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return (
@@ -41,32 +44,31 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
   }
 
   private onNewItem = (item: CreatedWorkItem) => {
-    const workItems = [...this.state.workItems, {
+    let workItems = [...this.state.workItems, {
       id: (Math.random() * 100).toFixed(0),
       name: item.name,
       dateFrom: new Date(item.dateFrom),
     }];
 
-    workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
+    workItems = WorkExperienceSection.sortItems(workItems);
 
     this.setState({ workItems });
   };
 
-  private renderSection() {
-    const renderItem = (item: WorkItem) => (
-      <li key={`work-item-${item.id}`}>
-        ({item.dateFrom.getFullYear()}{item.dateTo ? `-${item.dateTo.getFullYear()}` : ''})&nbsp;
-        {item.name}
-      </li>
-    );
+  private static sortItems(workItems: WorkItem[]): WorkItem[] {
+    return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
+  }
 
-    let content = <ul>
-      {this.state.workItems.map((item) => renderItem(item))}
-    </ul>;
+  private renderSection() {
+    let content;
 
     if (!this.state.workItems.length) {
       content = <div className="ui center aligned padded text container" style={{ height: '4em' }}>
         Section is empty. You may add a new item now!
+      </div>;
+    } else {
+      content = <div className="ui padded grid">
+        {this.state.workItems.map((item) => <SectionItem key={item.id} item={item}/>)}
       </div>;
     }
 

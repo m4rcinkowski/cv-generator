@@ -27,19 +27,21 @@ class WorkItemCreateForm extends Component<CreateFormProps> {
 
   public render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return (
-      <form onSubmit={this.onNewWorkItem} className="ui form">
+      <form onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
         <div className="two fields">
           <div className="field required four wide">
             <label htmlFor="create-work-item-from">Since:</label>
-            <input onChange={(e) => this.setState({dateFrom: e.target.value})} id="create-work-item-from" placeholder="Since when you work(ed) there" value={this.state.dateFrom} />
+            <input onChange={(e) => this.setState({ dateFrom: e.target.value })} id="create-work-item-from"
+                   placeholder="Since when you work(ed) there" value={this.state.dateFrom}/>
           </div>
           <div className="field required twelve wide">
             <label htmlFor="create-work-item-name">Name:</label>
-            <input onChange={(e) => this.setState({name: e.target.value})} id="create-work-item-name" placeholder="Company name" value={this.state.name} />
+            <input onChange={(e) => this.setState({ name: e.target.value })} id="create-work-item-name"
+                   placeholder="Company name" value={this.state.name}/>
           </div>
         </div>
         <div className="ui container center aligned">
-          <input type="submit" value="Add" className="ui button primary" />
+          <input type="submit" value="Add" className="ui button primary"/>
         </div>
       </form>
     );
