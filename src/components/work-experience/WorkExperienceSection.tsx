@@ -72,7 +72,7 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     let creationForm: ReactNode;
 
     if (this.state.showCreationForm) {
-      creationForm = <WorkItemCreateForm onSubmit={this.onNewItem}/>;
+      creationForm = <WorkItemCreateForm/>;
     }
 
     if (!this.state.workItems.length) {
