@@ -7,37 +7,41 @@ type CreateFormProps = {
 };
 
 class WorkItemCreateForm extends Component<CreateFormProps> {
-  state = {
-    name: '',
-    dateFrom: '',
-  };
+  private readonly formRef: React.RefObject<HTMLFormElement>;
 
-  private onNewWorkItem = (event: any) => {
+  constructor(props: Readonly<CreateFormProps>) {
+    super(props);
+
+    this.formRef = React.createRef();
+  }
+
+  private onNewWorkItem: React.FormEventHandler = (event) => {
     event.preventDefault();
+    const target = event.target as typeof event.target & {
+      name: { value: string },
+      dateFrom: { value: string },
+    };
 
     this.props.onSubmit({
-      name: this.state.name,
-      dateFrom: this.state.dateFrom,
+      name: target.name.value,
+      dateFrom: target.dateFrom.value,
     });
-    this.setState({
-      name: '',
-      dateFrom: '',
-    });
+    this.formRef.current?.reset();
   };
 
-  public render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+  public render(): React.ReactNode {
     return (
-      <form onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
+      <form ref={this.formRef} onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
         <div className="two fields">
           <div className="field required four wide">
             <label htmlFor="create-work-item-from">Since:</label>
-            <input onChange={(e) => this.setState({ dateFrom: e.target.value })} id="create-work-item-from"
-                   placeholder="Since when you work(ed) there" value={this.state.dateFrom}/>
+            <input name="dateFrom" id="create-work-item-from"
+                   placeholder="Since when you work(ed) there"/>
           </div>
           <div className="field required twelve wide">
             <label htmlFor="create-work-item-name">Name:</label>
-            <input onChange={(e) => this.setState({ name: e.target.value })} id="create-work-item-name"
-                   placeholder="Company name" value={this.state.name}/>
+            <input name={'name'} id="create-work-item-name"
+                   placeholder="Company name"/>
           </div>
         </div>
         <div className="ui container center aligned">
