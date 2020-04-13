@@ -33,9 +33,8 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
   };
 
   public render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-    console.log(this.state);
     return (
-      <div>
+      <div className="column">
         {this.renderSection()}
       </div>
     );
@@ -66,7 +65,7 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     </ul>;
 
     if (!this.state.workItems.length) {
-      content = <div>
+      content = <div className="ui center aligned padded text container" style={{ height: '4em' }}>
         Section is empty. You may add a new item now!
       </div>;
     }
