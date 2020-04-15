@@ -30,19 +30,9 @@ const mapState = (state: StoreState) => {
 
 const connector = connect(mapState, { addWorkItem });
 
-type WorkExperienceProps = typeof WorkExperienceSection.defaultProps & ConnectedProps<typeof connector>;
+type WorkExperienceProps = ConnectedProps<typeof connector>;
 
 class WorkExperienceSection extends React.Component<WorkExperienceProps> {
-  static defaultProps = {
-    workItems: [] as WorkItem[],
-    showCreationForm: false,
-  };
-
-  constructor(props: Readonly<WorkExperienceProps>) {
-    super(props);
-    console.log(`section constructor props`, props);
-  }
-
   public static sortItems(workItems: WorkItem[]): WorkItem[] {
     return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
   }
@@ -76,7 +66,7 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps> {
     }
 
     return <>
-      <SectionHeader name="Work experience"/>
+      <SectionHeader name="Work experience" stateKey="workExperience"/>
       {content}
       {this.props.showCreationForm && <WorkItemCreateForm onSubmit={this.onNewItem}/>}
     </>;
