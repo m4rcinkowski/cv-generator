@@ -4,7 +4,7 @@ import React from 'react';
 import 'semantic-ui-css/semantic.css';
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
-import reducers from './reducers';
+import { reducers } from './store';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
