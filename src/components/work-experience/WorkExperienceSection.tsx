@@ -47,11 +47,11 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     );
   }
 
-  private onNewItem = (item: CreatedWorkItem) => {
+  private onNewItem = (item: {}) => {
     let workItems = [...this.state.workItems, {
       id: (Math.random() * 100).toFixed(0),
-      name: item.name,
-      dateFrom: new Date(item.dateFrom),
+      name: (item as CreatedWorkItem).name,
+      dateFrom: new Date((item as CreatedWorkItem).dateFrom),
     }];
 
     workItems = WorkExperienceSection.sortItems(workItems);
@@ -72,7 +72,7 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     let creationForm: ReactNode;
 
     if (this.state.showCreationForm) {
-      creationForm = <WorkItemCreateForm/>;
+      creationForm = <WorkItemCreateForm onSubmit={this.onNewItem} />;
     }
 
     if (!this.state.workItems.length) {
