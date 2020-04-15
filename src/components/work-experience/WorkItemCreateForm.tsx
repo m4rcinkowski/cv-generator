@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 export type CreatedWorkItem = { name: string, dateFrom: string };
 
@@ -6,35 +7,23 @@ type CreateFormProps = {
   onSubmit: (item: CreatedWorkItem) => void,
 };
 
-class WorkItemCreateForm extends Component<CreateFormProps> {
-  private onNewWorkItem: React.FormEventHandler = (event) => {
-    event.preventDefault();
-    const target = event.target as typeof event.target & {
-      name: { value: string },
-      dateFrom: { value: string },
-      reset: () => void,
-    };
+export interface IDispatchProps {
+}
 
-    this.props.onSubmit({
-      name: target.name.value,
-      dateFrom: target.dateFrom.value,
-    });
-    target.reset();
-  };
+type WorkItemCreateFormProps = CreateFormProps & IDispatchProps & InjectedFormProps;
 
+class WorkItemCreateForm extends Component<WorkItemCreateFormProps> {
   public render(): React.ReactNode {
     return (
-      <form onSubmit={this.onNewWorkItem} className="ui form" style={{ marginTop: '2em' }}>
+      <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="ui form" style={{ marginTop: '2em' }}>
         <div className="two fields">
           <div className="field required four wide">
-            <label htmlFor="create-work-item-from">Since:</label>
-            <input name="dateFrom" id="create-work-item-from"
-                   placeholder="Since when you work(ed) there"/>
+            <label htmlFor="work-item-new-dateFrom">Since:</label>
+            <Field name="dateFrom" id="work-item-new-dateFrom" component="input" type="text" placeholder="Since when"/>
           </div>
           <div className="field required twelve wide">
-            <label htmlFor="create-work-item-name">Name:</label>
-            <input name={'name'} id="create-work-item-name"
-                   placeholder="Company name"/>
+            <label htmlFor="work-item-new-name">Name:</label>
+            <Field name="name" id="work-item-new-name" component="input" type="text" label="Name" placeholder="Company name"/>
           </div>
         </div>
         <div className="ui container center aligned">
@@ -43,6 +32,18 @@ class WorkItemCreateForm extends Component<CreateFormProps> {
       </form>
     );
   }
+
+  private onSubmit = (data: any) => {
+    console.log(data);
+
+    this.props.onSubmit({
+      name: (data as CreatedWorkItem).name,
+      dateFrom: (data as CreatedWorkItem).dateFrom,
+    });
+    this.props.reset();
+  };
 }
 
-export default WorkItemCreateForm;
+export default reduxForm({
+  form: 'WorkExperienceItem',
+})(WorkItemCreateForm as any);

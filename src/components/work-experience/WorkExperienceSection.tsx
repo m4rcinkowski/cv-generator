@@ -1,7 +1,10 @@
 import React, { ReactNode } from 'react';
-import { Header } from '../SectionHeader';
+import { SectionHeader } from '..';
 import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
 import SectionItem from './SectionItem';
+import { connect, ConnectedProps } from 'react-redux';
+import { StoreState } from '../../store/reducers';
+import { addWorkItem } from '../../store/work-experience';
 
 export type WorkSubsection = {
   type: 'note' | 'project',
@@ -18,25 +21,20 @@ export type WorkItem = {
   subsections?: WorkSubsection[],
 };
 
-type WorkExperienceProps = typeof WorkExperienceSection.defaultProps & {};
-
-type WorkExperienceState = {
-  workItems: WorkItem[],
-  showCreationForm: boolean,
+const mapState = (state: StoreState) => {
+  return {
+    showCreationForm: state.workExperience.showNewItemForm,
+    workItems: state.workExperience.workItems,
+  };
 };
 
-class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExperienceState> {
-  static defaultProps = {
-    workItems: [] as WorkItem[],
-  };
+const connector = connect(mapState, { addWorkItem });
 
+type WorkExperienceProps = ConnectedProps<typeof connector>;
 
-  constructor(props: Readonly<WorkExperienceProps>) {
-    super(props);
-    this.state = {
-      workItems: WorkExperienceSection.sortItems(props.workItems),
-      showCreationForm: false,
-    };
+class WorkExperienceSection extends React.Component<WorkExperienceProps> {
+  public static sortItems(workItems: WorkItem[]): WorkItem[] {
+    return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
   }
 
   public render(): React.ReactNode {
@@ -47,50 +45,32 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps, WorkExp
     );
   }
 
-  private onNewItem = (item: CreatedWorkItem) => {
-    let workItems = [...this.state.workItems, {
-      id: (Math.random() * 100).toFixed(0),
-      name: item.name,
-      dateFrom: new Date(item.dateFrom),
-    }];
-
-    workItems = WorkExperienceSection.sortItems(workItems);
-
-    this.setState({ workItems });
-  };
-
-  private static sortItems(workItems: WorkItem[]): WorkItem[] {
-    return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
-  }
-
-  private onAddClicked = () => {
-    this.setState({ showCreationForm: !this.state.showCreationForm });
+  private onNewItem = (item: {}) => {
+    this.props.addWorkItem({
+      name: (item as CreatedWorkItem).name,
+      dateFrom: (item as CreatedWorkItem).dateFrom,
+    });
   };
 
   private renderSection() {
     let content: ReactNode;
-    let creationForm: ReactNode;
 
-    if (this.state.showCreationForm) {
-      creationForm = <WorkItemCreateForm onSubmit={this.onNewItem}/>;
-    }
-
-    if (!this.state.workItems.length) {
+    if (!this.props.workItems.length) {
       content = <div className="ui center aligned padded text container" style={{ height: '4em' }}>
         Section is empty. You may add a new item now!
       </div>;
     } else {
       content = <div className="ui padded grid">
-        {this.state.workItems.map((item) => <SectionItem key={item.id} item={item}/>)}
+        {this.props.workItems.map((item) => <SectionItem key={item.id} item={item}/>)}
       </div>;
     }
 
     return <>
-      <Header name="Work experience" onAddClicked={this.onAddClicked}/>
+      <SectionHeader name="Work experience" stateKey="workExperience"/>
       {content}
-      {creationForm}
+      {this.props.showCreationForm && <WorkItemCreateForm onSubmit={this.onNewItem}/>}
     </>;
   }
 }
 
-export default WorkExperienceSection;
+export default connector(WorkExperienceSection);
