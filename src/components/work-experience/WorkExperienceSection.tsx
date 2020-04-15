@@ -2,8 +2,9 @@ import React, { ReactNode } from 'react';
 import { SectionHeader } from '..';
 import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
 import SectionItem from './SectionItem';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '../../store/reducers';
+import { addWorkItem } from '../../store/work-experience';
 
 export type WorkSubsection = {
   type: 'note' | 'project',
@@ -20,13 +21,16 @@ export type WorkItem = {
   subsections?: WorkSubsection[],
 };
 
-type WorkExperienceProps = typeof WorkExperienceSection.defaultProps & {};
-
 const mapState = (state: StoreState) => {
   return {
     showCreationForm: state.workExperience.showNewItemForm,
+    workItems: state.workExperience.workItems,
   };
 };
+
+const connector = connect(mapState, { addWorkItem });
+
+type WorkExperienceProps = typeof WorkExperienceSection.defaultProps & ConnectedProps<typeof connector>;
 
 class WorkExperienceSection extends React.Component<WorkExperienceProps> {
   static defaultProps = {
@@ -39,7 +43,7 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps> {
     console.log(`section constructor props`, props);
   }
 
-  private static sortItems(workItems: WorkItem[]): WorkItem[] {
+  public static sortItems(workItems: WorkItem[]): WorkItem[] {
     return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
   }
 
@@ -52,15 +56,10 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps> {
   }
 
   private onNewItem = (item: {}) => {
-    let workItems = [...this.props.workItems, {
-      id: (Math.random() * 100).toFixed(0),
+    this.props.addWorkItem({
       name: (item as CreatedWorkItem).name,
-      dateFrom: new Date((item as CreatedWorkItem).dateFrom),
-    }];
-
-    workItems = WorkExperienceSection.sortItems(workItems);
-
-    this.setState({ workItems });
+      dateFrom: (item as CreatedWorkItem).dateFrom,
+    });
   };
 
   private renderSection() {
@@ -84,4 +83,4 @@ class WorkExperienceSection extends React.Component<WorkExperienceProps> {
   }
 }
 
-export default connect(mapState)(WorkExperienceSection);
+export default connector(WorkExperienceSection);

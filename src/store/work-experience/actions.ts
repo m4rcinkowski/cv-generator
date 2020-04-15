@@ -1,11 +1,11 @@
 import { WorkExperienceSectionActionType, WorkExperienceSectionActionTypes } from './types';
 import { CreatedWorkItem } from '../../components/work-experience/WorkItemCreateForm';
 
-export const addWorkItem = (values: CreatedWorkItem): WorkExperienceSectionActionType => ({
-  type: WorkExperienceSectionActionTypes.AddNewItem,
-  payload: values,
+export const addWorkItem = (item: CreatedWorkItem): WorkExperienceSectionActionType => ({
+  type: WorkExperienceSectionActionTypes.AddNewCompany,
+  payload: item,
 });
 
 export const toggleNewWorkItemForm = (): WorkExperienceSectionActionType => ({
-  type: WorkExperienceSectionActionTypes.ToggleNewItemForm,
+  type: WorkExperienceSectionActionTypes.ToggleNewCompanyForm,
 });

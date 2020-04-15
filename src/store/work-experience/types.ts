@@ -1,16 +1,16 @@
 import { CreatedWorkItem } from '../../components/work-experience/WorkItemCreateForm';
 
 export enum WorkExperienceSectionActionTypes {
-  ToggleNewItemForm,
-  AddNewItem,
+  ToggleNewCompanyForm = 'WORK/TOGGLE_NEW_COMPANY_FORM',
+  AddNewCompany = 'WORK/NEW_COMPANY_ADDED',
 }
 
 export type ShowNewWorkItemFormType = {
-  type: typeof WorkExperienceSectionActionTypes.ToggleNewItemForm,
+  type: typeof WorkExperienceSectionActionTypes.ToggleNewCompanyForm,
 }
 
 export type AddNewWorkItemType = {
-  type: typeof WorkExperienceSectionActionTypes.AddNewItem,
+  type: typeof WorkExperienceSectionActionTypes.AddNewCompany,
   payload: CreatedWorkItem,
 }
 
