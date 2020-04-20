@@ -7,13 +7,12 @@ type CreateFormProps = {
   onSubmit: (item: CreatedWorkItem) => void,
 };
 
-export interface IDispatchProps {
-}
-
-type WorkItemCreateFormProps = CreateFormProps & IDispatchProps & InjectedFormProps;
+type WorkItemCreateFormProps = CreateFormProps & InjectedFormProps;
 
 class WorkItemCreateForm extends Component<WorkItemCreateFormProps> {
   public render(): React.ReactNode {
+    console.log(this.props.initialValues);
+
     return (
       <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="ui form" style={{ marginTop: '2em' }}>
         <div className="two fields">
@@ -27,15 +26,13 @@ class WorkItemCreateForm extends Component<WorkItemCreateFormProps> {
           </div>
         </div>
         <div className="ui container center aligned">
-          <input type="submit" value="Add" className="ui button primary"/>
+          <input type="submit" value={"Add"} className="ui button primary"/>
         </div>
       </form>
     );
   }
 
   private onSubmit = (data: any) => {
-    console.log(data);
-
     this.props.onSubmit({
       name: (data as CreatedWorkItem).name,
       dateFrom: (data as CreatedWorkItem).dateFrom,

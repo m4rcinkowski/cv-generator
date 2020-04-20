@@ -1,7 +1,14 @@
 import React from 'react';
 import { WorkItem } from './WorkExperienceSection';
+import { connect, ConnectedProps } from 'react-redux';
+import { initialize } from 'redux-form';
+import { openNewWorkItemForm } from '../../store/work-experience';
 
-const SectionItem = (props: { item: WorkItem }) => {
+type Props = { item: WorkItem };
+
+const connector = connect(null, { fillForm: initialize, openNewWorkItemForm });
+
+const SectionItem = (props: Props & ConnectedProps<typeof connector>) => {
   const item = props.item;
   return (
     <div className="row">
@@ -17,11 +24,14 @@ const SectionItem = (props: { item: WorkItem }) => {
         <h3>{item.name}</h3>
       </div>
       <div className="right aligned two wide column">
-        <i className="edit icon"/>
+        <i className="edit icon" onClick={() => {
+          props.fillForm('WorkExperienceItem', item);
+          props.openNewWorkItemForm();
+        }}/>
         <i className="delete icon"/>
       </div>
     </div>
   );
 };
 
-export default SectionItem;
+export default connector(SectionItem);

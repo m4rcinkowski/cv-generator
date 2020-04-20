@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { SectionHeader } from '..';
 import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
 import SectionItem from './SectionItem';
@@ -12,8 +12,10 @@ export type WorkSubsection = {
   params: { [k: string]: string },
 };
 
+export type WorkItemId = string | number;
+
 export type WorkItem = {
-  id: string | number,
+  id?: WorkItemId,
   name: string,
   dateFrom: Date,
   dateTo?: Date,
@@ -32,12 +34,12 @@ const connector = connect(mapState, { addWorkItem });
 
 type WorkExperienceProps = ConnectedProps<typeof connector>;
 
-class WorkExperienceSection extends React.Component<WorkExperienceProps> {
+class WorkExperienceSection extends Component<WorkExperienceProps> {
   public static sortItems(workItems: WorkItem[]): WorkItem[] {
     return workItems.sort((a, b) => b.dateFrom.getTime() - a.dateFrom.getTime());
   }
 
-  public render(): React.ReactNode {
+  public render(): ReactNode {
     return (
       <div className="column">
         {this.renderSection()}
