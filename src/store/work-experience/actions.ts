@@ -1,5 +1,5 @@
 import { WorkExperienceSectionActionType, WorkExperienceSectionActionTypes } from './types';
-import { CreatedWorkItem } from '../../components/work-experience/WorkItemCreateForm';
+import { CreatedWorkItem } from '../../components/work-experience/WorkItemForm';
 import { WorkItem } from '../../components/work-experience/WorkExperienceSection';
 
 export const addWorkItem = (item: CreatedWorkItem): WorkExperienceSectionActionType => ({

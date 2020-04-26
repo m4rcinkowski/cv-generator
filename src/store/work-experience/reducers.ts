@@ -2,12 +2,12 @@ import { WorkExperienceSectionActionType, WorkExperienceSectionActionTypes } fro
 import WorkExperienceSection, { WorkItem } from '../../components/work-experience/WorkExperienceSection';
 
 export type WorkExperienceState = {
-  showNewItemForm: boolean,
+  workItemForm: null | 'new' | 'edit',
   workItems: WorkItem[],
 }
 
 const initialState: WorkExperienceState = {
-  showNewItemForm: false,
+  workItemForm: null,
   workItems: [
     { id: 4, name: 'Something next', dateFrom: new Date('2020') },
     { id: 3, name: 'RST Software Masters', dateFrom: new Date('2015') },
@@ -42,9 +42,9 @@ export const workExperienceReducer = (state = initialState, action: WorkExperien
         workItems: WorkExperienceSection.sortItems(newItems),
       };
     case WorkExperienceSectionActionTypes.ToggleNewCompanyForm:
-      return { ...state, showNewItemForm: !state.showNewItemForm };
+      return { ...state, workItemForm: state.workItemForm === null ? 'new' : null };
     case WorkExperienceSectionActionTypes.OpenNewCompanyForm:
-      return { ...state, showNewItemForm: true };
+      return { ...state, workItemForm: 'edit' };
     default:
       return state;
   }

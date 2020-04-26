@@ -1,4 +1,4 @@
-import { CreatedWorkItem } from '../../components/work-experience/WorkItemCreateForm';
+import { CreatedWorkItem } from '../../components/work-experience/WorkItemForm';
 import { WorkItem } from '../../components/work-experience/WorkExperienceSection';
 
 export enum WorkExperienceSectionActionTypes {

@@ -1,10 +1,10 @@
 import React, { Component, ReactNode } from 'react';
 import { SectionHeader } from '..';
-import WorkItemCreateForm, { CreatedWorkItem } from './WorkItemCreateForm';
+import WorkItemForm, { CreatedWorkItem } from './WorkItemForm';
 import SectionItem from './SectionItem';
 import { connect, ConnectedProps } from 'react-redux';
 import { StoreState } from '../../store/reducers';
-import { addWorkItem } from '../../store/work-experience';
+import { addWorkItem, editWorkItem } from '../../store/work-experience';
 
 export type WorkSubsection = {
   type: 'note' | 'project',
@@ -25,12 +25,12 @@ export type WorkItem = {
 
 const mapState = (state: StoreState) => {
   return {
-    showCreationForm: state.workExperience.showNewItemForm,
+    showCreationForm: !!state.workExperience.workItemForm,
     workItems: state.workExperience.workItems,
   };
 };
 
-const connector = connect(mapState, { addWorkItem });
+const connector = connect(mapState, { addWorkItem, editWorkItem });
 
 type WorkExperienceProps = ConnectedProps<typeof connector>;
 
@@ -47,11 +47,15 @@ class WorkExperienceSection extends Component<WorkExperienceProps> {
     );
   }
 
-  private onNewItem = (item: {}) => {
+  private onNewItem = (item: CreatedWorkItem) => {
     this.props.addWorkItem({
       name: (item as CreatedWorkItem).name,
       dateFrom: (item as CreatedWorkItem).dateFrom,
     });
+  };
+
+  private onItemEdited = (item: WorkItem) => {
+    this.props.editWorkItem(item);
   };
 
   private renderSection() {
@@ -70,7 +74,7 @@ class WorkExperienceSection extends Component<WorkExperienceProps> {
     return <>
       <SectionHeader name="Work experience" stateKey="workExperience"/>
       {content}
-      {this.props.showCreationForm && <WorkItemCreateForm onSubmit={this.onNewItem}/>}
+      {this.props.showCreationForm && <WorkItemForm onNew={this.onNewItem} onEdited={this.onItemEdited} />}
     </>;
   }
 }
